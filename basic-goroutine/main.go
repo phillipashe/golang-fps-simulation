@@ -22,6 +22,6 @@ func main() {
 func shootLaser(names [4]string) {
 
 	for _, name := range names {
-		fmt.Printf("Shooting a laser at %s\n", name)
+		go fmt.Printf("Shooting a laser at %s\n", name)
 	}
 }
