@@ -2,8 +2,11 @@ package main
 
 import (
 	"fmt"
+	"sync"
 	"time"
 )
+
+var wg sync.WaitGroup
 
 func main() {
 
@@ -15,13 +18,18 @@ func main() {
 	}()
 
 	names := [4]string{"Thomas", "Caleb", "Shelby", "Phillip"}
-	shootLaser(names)
-
+	getNames(names)
+	wg.Wait()
 }
 
-func shootLaser(names [4]string) {
+func shootLaser(name string) {
+	fmt.Printf("Shooting a laser at %s\n", name)
+	wg.Done()
+}
 
+func getNames(names [4]string) {
 	for _, name := range names {
-		go fmt.Printf("Shooting a laser at %s\n", name)
+		wg.Add(1)
+		go shootLaser(name)
 	}
 }
