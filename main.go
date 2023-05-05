@@ -30,29 +30,33 @@ func main() {
 		fmt.Printf("Match finished in %s\n", time.Since(startTimer))
 	}()
 
-	players := loadPlayers()
-	getNames(players)
+	playerList := loadPlayers()
+	startBattle(playerList)
 	wg.Wait()
 }
 
 // currently hardcoded
-func loadPlayers() []Player {
+func loadPlayers() *[]Player {
 	var players []Player
 	names := [4]string{"Thomas", "Caleb", "Shelby", "Phillip"}
 	for _, name := range names {
 		players = append(players, Player{Name: name, Health: 100})
 	}
-	return players
+	return &players
 }
 
-func shootLaser(name string) {
-	fmt.Printf("Shooting a laser at %s\n", name)
+func AttackPlayers(player *Player, playerList *[]Player) {
+
+	for player.Health > 0 {
+		fmt.Printf("Shooting a laser at %s\n", player.Name)
+		player.Health = player.Health - 50
+	}
 	wg.Done()
 }
 
-func getNames(players []Player) {
-	for _, player := range players {
+func startBattle(playerList *[]Player) {
+	for _, player := range *playerList {
 		wg.Add(1)
-		go shootLaser(player.Name)
+		AttackPlayers(&player, playerList)
 	}
 }
